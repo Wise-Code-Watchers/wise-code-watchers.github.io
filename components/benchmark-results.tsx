@@ -304,7 +304,7 @@ function getGitHubPRLink(projectName: string, tool: string, index: number): stri
   const prId = index + 1
 
   if (tool === "wcw") {
-    return `https://github.com/Wise-Code-Watchers/${projectSlug}-wcw/pull/${prId}`
+    return `https://github.com/Wise-Code-Watchers/${projectSlug}-wcw/pull/${11-prId}`
   } else {
     const toolSlug = tool.toLowerCase()
     return `https://github.com/ai-code-review-evaluation/${projectSlug}-${toolSlug}/pull/${prId}`
