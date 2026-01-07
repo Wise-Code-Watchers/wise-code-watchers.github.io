@@ -22,12 +22,12 @@ export function WCWStory() {
         </div>
 
         {/* 三列卡片 */}
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 lg:grid-cols-3 items-stretch">
           {/* Why Now */}
-          <Reveal>
-            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <Reveal delayMs={0}>
+            <div className="rounded-xl border border-border bg-card p-6 shadow-sm h-full flex flex-col">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 rounded-lg bg-[#9cb8c8]/30 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-lg bg-[#9cb8c8]/30 flex items-center justify-center shrink-0">
                   <AlertTriangle className="h-5 w-5" />
                 </div>
                 <div>
@@ -36,20 +36,20 @@ export function WCWStory() {
                 </div>
               </div>
 
-              <ul className="space-y-3 text-muted-foreground leading-relaxed">
+              <ul className="space-y-3 text-muted-foreground leading-relaxed flex-1">
                 <li>• PR 规模大、改动复杂，人工 Review 耗时且遗漏率高</li>
                 <li>• 安全漏洞与逻辑缺陷往往上线后才暴露，修复成本高</li>
-                <li>• 传统工具（lint / scanner）只“报规则”，缺少上下文理解与跨文件推理</li>
+                <li>• 传统工具（lint / scanner）只"报规则"，缺少上下文理解与跨文件推理</li>
                 <li>• Review 结果无法聚焦，开发者常被低质量噪声干扰</li>
               </ul>
             </div>
           </Reveal>
 
           {/* What */}
-          <Reveal delayMs={120}>
-            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <Reveal delayMs={150}>
+            <div className="rounded-xl border border-border bg-card p-6 shadow-sm h-full flex flex-col">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 rounded-lg bg-[#9cb8c8]/30 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-lg bg-[#9cb8c8]/30 flex items-center justify-center shrink-0">
                   <Sparkles className="h-5 w-5" />
                 </div>
                 <div>
@@ -58,7 +58,7 @@ export function WCWStory() {
                 </div>
               </div>
 
-              <div className="space-y-3 text-muted-foreground leading-relaxed">
+              <div className="space-y-3 text-muted-foreground leading-relaxed flex-1">
                 <p className="font-semibold text-foreground">
                   Wise Code Watchers = GitHub App + LangGraph 多 Agent 工作流
                 </p>
@@ -73,10 +73,10 @@ export function WCWStory() {
           </Reveal>
 
           {/* Key Features */}
-          <Reveal delayMs={220}>
-            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+          <Reveal delayMs={300}>
+            <div className="rounded-xl border border-border bg-card p-6 shadow-sm h-full flex flex-col">
               <div className="flex items-center gap-3 mb-4">
-                <div className="h-10 w-10 rounded-lg bg-[#9cb8c8]/30 flex items-center justify-center">
+                <div className="h-10 w-10 rounded-lg bg-[#9cb8c8]/30 flex items-center justify-center shrink-0">
                   <Boxes className="h-5 w-5" />
                 </div>
                 <div>
@@ -85,11 +85,11 @@ export function WCWStory() {
                 </div>
               </div>
 
-              <ul className="space-y-3 text-muted-foreground leading-relaxed">
+              <ul className="space-y-3 text-muted-foreground leading-relaxed flex-1">
                 {[
                   "多 Agent 并行协作（LangGraph Workflow）",
                   "Security Agent + Semgrep 证据先行漏洞检测",
-                  "Logic Agent 深度逻辑缺陷推理（支持 Semgrep 证据增强）",
+                  "Logic Agent 深度逻辑缺陷推理",
                   "跨文件影响分析（Cross-file Impact）",
                   "风险评分系统（相关性/严重性/置信度）自动筛噪",
                   "深度 GitHub 集成（Webhook 触发、PR Inline comments）",

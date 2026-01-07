@@ -9,7 +9,6 @@ export default function Home() {
     <main className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-background">
       <BenchmarkHero />
       <WCWStory />
-      <WCWArchitecture />
       <BenchmarkOverview />
       <BenchmarkResults />
     </main>
