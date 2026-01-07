@@ -39,6 +39,15 @@ export function Reveal({ children, className, delayMs = 0, once = true }: Reveal
     )
 
     observer.observe(el)
+
+    // 立即检查元素是否已经在视口内（修复初始加载时的显示问题）
+    const rect = el.getBoundingClientRect()
+    const isVisible = rect.top < window.innerHeight * 0.82 && rect.bottom > 0
+    if (isVisible) {
+      setShown(true)
+      if (once) observer.disconnect()
+    }
+
     return () => observer.disconnect()
   }, [once])
 

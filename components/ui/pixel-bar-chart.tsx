@@ -24,6 +24,15 @@ function useOnceInView<T extends HTMLElement>(threshold = 0.2) {
     )
 
     observer.observe(el)
+
+    // 立即检查元素是否已经在视口内
+    const rect = el.getBoundingClientRect()
+    const isVisible = rect.top < window.innerHeight * (1 - threshold) && rect.bottom > 0
+    if (isVisible) {
+      setInView(true)
+      observer.disconnect()
+    }
+
     return () => observer.disconnect()
   }, [threshold])
 
