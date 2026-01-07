@@ -135,7 +135,7 @@ export function BenchmarkResults() {
       <div className="container mx-auto px-4">
         <div className="mb-12">
           <h2 className="mb-4 text-4xl font-black tracking-tight md:text-5xl">测试数据集</h2>
-          <p className="text-muted-foreground max-w-3xl text-lg">
+          <p className="text-muted-foreground text-lg">
             测试涵盖 5 个不同编程语言的知名开源项目，每个项目包含 10 个精选的真实 bug 修复案例。
             点击任意单元格可查看对应工具在该 PR 中的实际审查表现，直观对比{" "}
             <span className="font-semibold text-[#3b82f6]">wcw</span> 与其他工具的差异。

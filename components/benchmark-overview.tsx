@@ -12,9 +12,17 @@ export function BenchmarkOverview() {
   const greptileStats = toolStats.find((stat) => stat.tool === "Greptile")!
   const cursorStats = toolStats.find((stat) => stat.tool === "Cursor")!
   const copilotStats = toolStats.find((stat) => stat.tool === "Copilot")!
+  const coderabbitStats = toolStats.find((stat) => stat.tool === "CodeRabbit")!
+  const graphiteStats = toolStats.find((stat) => stat.tool === "Graphite")!
 
-  const wcwLeadOverGreptile = wcwStats.accuracy - greptileStats.accuracy
   const wcwLeadOverCursor = wcwStats.accuracy - cursorStats.accuracy
+  const wcwLeadOverCopilot = wcwStats.accuracy - copilotStats.accuracy
+  const wcwLeadOverCodeRabbit = wcwStats.accuracy - coderabbitStats.accuracy
+  const wcwLeadOverGraphite = wcwStats.accuracy - graphiteStats.accuracy
+
+  // 计算排名
+  const sortedStats = [...toolStats].sort((a, b) => b.accuracy - a.accuracy)
+  const wcwRank = sortedStats.findIndex((s) => s.tool === "wcw") + 1
 
   return (
     <section className="py-16 md:py-24 bg-background">
@@ -57,22 +65,26 @@ export function BenchmarkOverview() {
             <div className="space-y-4 text-muted-foreground">
               <p>
                 <span className="font-semibold text-[#3b82f6]">wcw</span> 以{" "}
-                <span className="font-bold text-foreground">{wcwStats.accuracy.toFixed(0)}%</span> 的综合检出率
-                <span className="font-semibold text-[#3b82f6]">领跑全场</span>， 较第二名 Greptile（
-                {greptileStats.accuracy.toFixed(0)}%）领先{" "}
-                <span className="font-bold text-foreground">{wcwLeadOverGreptile.toFixed(0)}</span> 个百分点。
+                <span className="font-bold text-foreground">{wcwStats.accuracy.toFixed(0)}%</span> 的综合检出率 位列第{" "}
+                <span className="font-bold text-foreground">{wcwRank}</span> 名，
+                <span className="font-semibold text-[#3b82f6]">大幅领先</span> Cursor（+{wcwLeadOverCursor.toFixed(0)}
+                %）、 Copilot（+{wcwLeadOverCopilot.toFixed(0)}%）、CodeRabbit（+{wcwLeadOverCodeRabbit.toFixed(0)}%）、
+                Graphite（+{wcwLeadOverGraphite.toFixed(0)}%）等主流工具。
               </p>
               <p>
-                在严重（Critical）级别 bug 检测中，wcw 检出率达到{" "}
-                <span className="font-bold text-foreground">{wcwStats.bySeverity.CRITICAL.rate.toFixed(0)}%</span>，
-                在高危（High）级别检测中更是达到{" "}
+                在<span className="font-semibold text-red-500">严重（Critical）</span>级别 bug 检测中， wcw 检出率达到{" "}
+                <span className="font-bold text-foreground">{wcwStats.bySeverity.CRITICAL.rate.toFixed(0)}%</span>； 在
+                <span className="font-semibold text-orange-500">高危（High）</span>级别检测中更是达到{" "}
                 <span className="font-bold text-foreground">{wcwStats.bySeverity.HIGH.rate.toFixed(0)}%</span>，
-                显著优于竞品。
+                展现出对关键安全漏洞的<span className="font-semibold text-[#3b82f6]">卓越捕获能力</span>。
               </p>
-              <p className="text-sm">
-                值得注意的是，Greptile 在 Keycloak 和 Discourse 项目中存在{" "}
-                <span className="text-red-500 font-medium">4 处关键漏报</span>， 这些被遗漏的 bug
-                在真实场景中可能造成严重后果。
+              <p>
+                尽管 Greptile 在综合检出率上以 {greptileStats.accuracy.toFixed(0)}% 暂居首位， 但其在 Keycloak 和
+                Discourse 项目中存在{" "}
+                <span className="text-red-500 font-medium">{greptileStats.totalFalsePositive} 处关键漏报</span>
+                （标红行）， 这些被遗漏的严重 bug 在真实生产环境中可能导致安全事故。 wcw
+                在这些关键案例中均成功检出，体现了更
+                <span className="font-semibold text-[#3b82f6]">稳健可靠</span>的检测能力。
               </p>
             </div>
           </div>
