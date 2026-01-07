@@ -2,6 +2,33 @@
 
 import { cn } from "@/lib/utils"
 import type { ToolStats } from "@/lib/benchmark-calculator"
+import { useEffect, useRef, useState } from "react"
+
+function useOnceInView<T extends HTMLElement>(threshold = 0.2) {
+  const ref = useRef<T | null>(null)
+  const [inView, setInView] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (entry?.isIntersecting) {
+          setInView(true)
+          observer.disconnect()
+        }
+      },
+      { threshold },
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [threshold])
+
+  return { ref, inView }
+}
 
 const TOOL_COLORS: Record<string, { fill: string; border: string; text: string }> = {
   wcw: { fill: "#bfdbfe", border: "#3b82f6", text: "#2563eb" },
@@ -20,6 +47,8 @@ interface SeverityBarChartProps {
 }
 
 export function SeverityBarChart({ toolStats, severityFilter, compact = false, className }: SeverityBarChartProps) {
+  const { ref, inView } = useOnceInView<HTMLDivElement>(0.25)
+
   // 排序：wcw排第一
   const orderedTools = [...toolStats.filter((t) => t.tool === "wcw"), ...toolStats.filter((t) => t.tool !== "wcw")]
 
@@ -37,7 +66,7 @@ export function SeverityBarChart({ toolStats, severityFilter, compact = false, c
 
   if (compact) {
     return (
-      <div className={cn("flex flex-col items-center", className)}>
+      <div ref={ref} className={cn("flex flex-col items-center", className)}>
         <div className="flex items-end justify-center gap-2">
           {orderedTools.map((stat) => {
             const value = getValue(stat)
@@ -48,16 +77,20 @@ export function SeverityBarChart({ toolStats, severityFilter, compact = false, c
             return (
               <div key={stat.tool} className="flex flex-col items-center">
                 <span
-                  className={cn("text-[10px] mb-1", isWcw ? "font-bold" : "font-medium")}
+                  className={cn(
+                    "text-[10px] mb-1 transition-opacity duration-500",
+                    inView ? "opacity-100" : "opacity-0",
+                    isWcw ? "font-bold" : "font-medium",
+                  )}
                   style={{ color: colors.text }}
                 >
                   {value.toFixed(0)}%
                 </span>
                 <div
-                  className="transition-all duration-300"
+                  className="transition-[height] duration-700 ease-out"
                   style={{
                     width: "18px",
-                    height: `${Math.max(height, 8)}px`,
+                    height: inView ? `${Math.max(height, 8)}px` : "0px",
                     backgroundColor: colors.fill,
                     border: `2px dashed ${colors.border}`,
                   }}
@@ -81,7 +114,7 @@ export function SeverityBarChart({ toolStats, severityFilter, compact = false, c
   ]
 
   return (
-    <div className={cn("space-y-6 w-full", className)}>
+    <div ref={ref} className={cn("space-y-6 w-full", className)}>
       {/* 图例 */}
       <div className="flex items-center justify-center gap-3 flex-wrap">
         {orderedTools.map((stat) => {
@@ -116,7 +149,8 @@ export function SeverityBarChart({ toolStats, severityFilter, compact = false, c
                     <div key={stat.tool} className="flex flex-col items-center">
                       <span
                         className={cn(
-                          "text-[9px] sm:text-[10px] mb-1 whitespace-nowrap",
+                          "text-[9px] sm:text-[10px] mb-1 whitespace-nowrap transition-opacity duration-500",
+                          inView ? "opacity-100" : "opacity-0",
                           isWcw ? "font-bold" : "font-medium",
                         )}
                         style={{ color: colors.text }}
@@ -124,10 +158,10 @@ export function SeverityBarChart({ toolStats, severityFilter, compact = false, c
                         {value.toFixed(0)}%
                       </span>
                       <div
-                        className="transition-all duration-300"
+                        className="transition-[height] duration-700 ease-out"
                         style={{
                           width: "20px",
-                          height: `${Math.max(height, 6)}px`,
+                          height: inView ? `${Math.max(height, 6)}px` : "0px",
                           backgroundColor: colors.fill,
                           border: `2px dashed ${colors.border}`,
                         }}
@@ -151,12 +185,14 @@ interface OverallBarChartProps {
 }
 
 export function OverallBarChart({ toolStats, className }: OverallBarChartProps) {
+  const { ref, inView } = useOnceInView<HTMLDivElement>(0.25)
+
   // 按准确率排序（降序）
   const sortedTools = [...toolStats].sort((a, b) => b.accuracy - a.accuracy)
   const maxHeight = 140
 
   return (
-    <div className={cn("flex flex-col items-center w-full", className)}>
+    <div ref={ref} className={cn("flex flex-col items-center w-full", className)}>
       <div className="flex items-end justify-center gap-2">
         {sortedTools.map((stat) => {
           const height = (stat.accuracy / 100) * maxHeight
@@ -165,14 +201,21 @@ export function OverallBarChart({ toolStats, className }: OverallBarChartProps) 
 
           return (
             <div key={stat.tool} className="flex flex-col items-center">
-              <span className={cn("text-xs mb-2", isWcw ? "font-bold" : "font-medium")} style={{ color: colors.text }}>
+              <span
+                className={cn(
+                  "text-xs mb-2 transition-opacity duration-500",
+                  inView ? "opacity-100" : "opacity-0",
+                  isWcw ? "font-bold" : "font-medium",
+                )}
+                style={{ color: colors.text }}
+              >
                 {stat.accuracy.toFixed(0)}%
               </span>
               <div
-                className="transition-all duration-300"
+                className="transition-[height] duration-700 ease-out"
                 style={{
                   width: "36px",
-                  height: `${Math.max(height, 8)}px`,
+                  height: inView ? `${Math.max(height, 8)}px` : "0px",
                   backgroundColor: colors.fill,
                   border: `2px dashed ${colors.border}`,
                 }}

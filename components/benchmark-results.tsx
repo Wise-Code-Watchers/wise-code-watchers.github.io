@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Check, X, AlertTriangle, Calendar, GitBranch, Shield, Tag, ExternalLink } from "lucide-react"
 import { benchmarkData, tools } from "@/lib/benchmark-data"
+import { Reveal } from "@/components/ui/reveal"
 
 const projectIcons: Record<string, React.ReactNode> = {
   Sentry: <Shield className="h-4 w-4" />,
@@ -131,15 +132,19 @@ export function BenchmarkResults() {
   const [activeProject, setActiveProject] = useState(benchmarkData[0].name)
 
   return (
-    <section className="py-16 md:py-24 border-t border-border">
-      <div className="container mx-auto px-4">
+    <section className="border-t border-border snap-start h-screen overflow-y-auto bg-background">
+      <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="mb-12">
-          <h2 className="mb-4 text-4xl font-black tracking-tight md:text-5xl">测试数据集</h2>
-          <p className="text-muted-foreground text-lg">
+          <Reveal>
+            <h2 className="mb-4 text-4xl font-black tracking-tight md:text-5xl">测试数据集</h2>
+          </Reveal>
+          <Reveal delayMs={120}>
+            <p className="text-muted-foreground text-lg">
             测试涵盖 5 个不同编程语言的知名开源项目，每个项目包含 10 个精选的真实 bug 修复案例。
             点击任意单元格可查看对应工具在该 PR 中的实际审查表现，直观对比{" "}
             <span className="font-semibold text-[#3b82f6]">wcw</span> 与其他工具的差异。
-          </p>
+            </p>
+          </Reveal>
         </div>
 
         <Tabs value={activeProject} onValueChange={setActiveProject}>
