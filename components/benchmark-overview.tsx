@@ -5,6 +5,7 @@ import { SeverityBarChart, OverallBarChart } from "@/components/ui/pixel-bar-cha
 import { Reveal } from "@/components/ui/reveal"
 import { calculateToolStats } from "@/lib/benchmark-calculator"
 import { useMemo } from "react"
+import Image from "next/image"
 
 export function BenchmarkOverview() {
   const toolStats = useMemo(() => calculateToolStats(), [])
@@ -65,6 +66,91 @@ export function BenchmarkOverview() {
             </div>
             <div className="p-6">
               <SeverityBarChart toolStats={toolStats} />
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Greptile 数据更正 */}
+        <Reveal delayMs={400}>
+          <div className="bg-card border border-border rounded-sm mb-12">
+            <div className="border-b border-border bg-[#9cb8c8]/30 px-6 py-4">
+              <div className="flex items-center justify-center gap-2 text-foreground font-mono">
+                <BarChart3 className="h-5 w-5" />
+                <span>数据更正：Greptile HIGH 级别检测率</span>
+              </div>
+            </div>
+            <div className="p-6 space-y-6">
+              {/* 图片 */}
+              <div className="flex justify-center">
+                <Image
+                  src="/high.png"
+                  alt="Greptile HIGH级别检测率声称"
+                  width={600}
+                  height={300}
+                  className="rounded border border-border"
+                />
+              </div>
+
+              {/* 计算算法说明 */}
+              <div className="bg-muted/50 rounded-lg p-4 border border-border">
+                <h4 className="font-semibold text-foreground mb-2 text-sm">📊 检出率计算方法</h4>
+                <div className="space-y-2 text-xs text-muted-foreground">
+                  <p className="font-mono bg-background p-2 rounded border">
+                    检出率 = (正确检出的 bug 数 / 该严重程度 bug 总数) × 100%
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-2">
+                    <div className="bg-background p-2 rounded border">
+                      <div className="font-medium text-foreground">HIGH 级别总数</div>
+                      <div className="text-lg font-bold text-[#3b82f6]">17 个 bug</div>
+                    </div>
+                    <div className="bg-background p-2 rounded border">
+                      <div className="font-medium text-foreground">Greptile 正确检出</div>
+                      <div className="text-lg font-bold text-red-500">13 个</div>
+                    </div>
+                    <div className="bg-background p-2 rounded border">
+                      <div className="font-medium text-foreground">Greptile 检出率</div>
+                      <div className="text-lg font-bold text-red-500">76.5%</div>
+                    </div>
+                  </div>
+                  <p className="pt-2 text-xs">
+                    <span className="text-foreground font-medium">判定标准：</span>
+                    每个工具对 50 个真实 bug 进行测试，
+                    <code className="bg-background px-1 rounded">1</code> = 正确检出，
+                    <code className="bg-background px-1 rounded">0</code> = 漏报，
+                    <code className="bg-background px-1 rounded">-1</code> = 误报
+                  </p>
+                </div>
+              </div>
+
+              {/* 说明文字 */}
+              <div className="space-y-3 text-muted-foreground text-sm">
+                <p>
+                  Greptile 宣称 HIGH 级别 <span className="font-semibold text-red-500">100%</span> 检测率，
+                  但实际评测显示仅为 <span className="font-bold text-foreground">{greptileStats.bySeverity.HIGH.rate.toFixed(1)}%</span>
+                  （{greptileStats.bySeverity.HIGH.correct}/17）。
+                </p>
+                <p>
+                  Greptile 在 HIGH 级别漏检的关键漏洞包括：
+                </p>
+                <ul className="list-disc list-inside space-y-1 ml-4 text-xs">
+                  <li>
+                    <span className="text-foreground font-medium">Cal.com:</span>
+                    SMS workflow 提醒系统漏洞（OR 条件导致所有工作流程提醒被删除）
+                  </li>
+                  <li>
+                    <span className="text-foreground font-medium">Grafana:</span>
+                    AuthZ 缓存漏洞（缓存条目未过期导致永久许可被拒）
+                  </li>
+                  <li>
+                    <span className="text-foreground font-medium">Keycloak:</span>
+                    权限管理漏洞（功能标志不一致导致权限被遗弃）
+                  </li>
+                </ul>
+                <p className="pt-2">
+                  <span className="text-[#3b82f6] font-semibold">wcw</span> 在以上所有 Greptile 漏检的关键案例中均成功检出，
+                  HIGH 级别检测率达到 <span className="font-bold text-foreground">{wcwStats.bySeverity.HIGH.rate.toFixed(0)}%</span>。
+                </p>
+              </div>
             </div>
           </div>
         </Reveal>
