@@ -486,7 +486,7 @@ export const benchmarkData: ProjectData[] = [
         description: "利用Flexbox混音优化头部布局性能\n混合浮点：左边用Flexbox会导致布局问题",
         severity: "LOW",
         wcw: 0,
-        Greptile: 1,
+        Greptile: 0,
         Copilot: 0,
         CodeRabbit: 1,
         Cursor: 0,
